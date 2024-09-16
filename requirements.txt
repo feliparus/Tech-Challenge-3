@@ -1,0 +1,26 @@
+# Biblioteca para realizar tradução automática entre diferentes idiomas usando APIs de tradução
+deep-translator
+
+# Para adicionar o FAISS (Facebook AI Similarity Search), usado para operações de índice de similaridade. Aqui estamos usando faiss-cpu, que é a versão CPU do FAISS
+faiss-cpu
+
+# Biblioteca para baixar arquivos do Google Drive a partir de um link compartilhável
+gdown
+
+# Biblioteca para ler e escrever grandes volumes de dados em arquivos HDF5 de forma eficiente e estruturada
+h5py
+
+# Biblioteca para operações matemáticas
+numpy
+
+# Biblioteca para análise e manipulação de dados
+pandas
+
+# Biblioteca que fornece uma interface Python para Apache Arrow, incluindo funcionalidades para leitura e escrita de arquivos Parquet
+pyarrow
+
+# Biblioteca para mostrar barras de progresso em loops e operações de longa duração
+tqdm
+
+# Biblioteca para manipulação de modelos e tokenizers de aprendizado profundo da biblioteca Hugging Face
+transformers
