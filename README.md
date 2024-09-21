@@ -35,7 +35,7 @@ Os motivos para a escolha do modelo e tokenizer (`DistilBertTokenizerFast`) ser√
 
 Execute os notebooks na ordem indicada para seguir o pipeline completo:
 
-  1_preparacao_dados.ipynb
-  2_fine_tunning.ipynb
-  3_Geracao_Embeddings_Em_Batches.ipynb
-  4_RAG.ipynb
+  1. Preparacao_dados.ipynb
+  2. Fine_tunning.ipynb
+  3. Geracao_Embeddings_Em_Batches.ipynb
+  4. RAG.ipynb
