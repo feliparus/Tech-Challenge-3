@@ -1,6 +1,6 @@
 # Tech Challenge - Fine-tuning e RAG com DistilBERT
 
-Este projeto tem como objetivo realizar o fine-tuning de um modelo pré-treinado `distilbert-base-uncased`, gerar embeddings e aplicar técnicas de Recuperação-Augmentada por Geração (RAG) para responder perguntas com base em dados fornecidos.
+Este projeto tem como objetivo realizar o fine-tuning de um modelo pré-treinado `distilbert-base-uncased`, gerar embeddings e aplicar técnicas de Recuperação Aumentada por Geração (RAG) para responder perguntas com base em dados fornecidos.
 
 ## Estrutura do Projeto
 
