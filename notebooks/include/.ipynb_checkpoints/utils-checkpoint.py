@@ -1,13 +1,17 @@
-import pandas as pd
-import os
-import zipfile
-import gzip
-import json
-import gdown
+from deep_translator import GoogleTranslator
 from io import BytesIO
 from tqdm import tqdm
+
+import gdown
+import gzip
+import h5py
+import json
+import os
+import pandas as pd
 import pyarrow as pa
 import pyarrow.parquet as pq
+import torch
+import zipfile
 
 
 def baixar_arquivo_zip(url):
@@ -160,3 +164,92 @@ def save_dataframe(df, file_path):
 # Carregar o DataFrame do arquivo Parquet
 def load_dataframe(file_path):
     return pd.read_parquet(file_path)
+
+
+def generate_embeddings(texts, tokenizer, model):
+    """
+    Gera embeddings para uma lista de textos usando um modelo pré-treinado.
+    
+    Args:
+        texts (list of str): Lista de textos para gerar embeddings.
+        tokenizer: Tokenizador do modelo.
+        model: Modelo pré-treinado para gerar embeddings.
+        
+    Returns:
+        numpy.ndarray: Embeddings gerados para os textos.
+    """
+    inputs = tokenizer(texts, padding=True, truncation=True, return_tensors='pt')
+    
+    # Gerando embeddings com a última camada oculta do modelo
+    with torch.no_grad():
+        outputs = model.distilbert(**inputs)
+    embeddings = outputs.last_hidden_state.mean(dim=1).numpy()
+    
+    return embeddings
+
+
+def save_embeddings_to_file(embeddings, file_path):
+    """
+    Salva embeddings em um arquivo HDF5.
+    
+    Args:
+        embeddings (numpy.ndarray): Embeddings a serem salvos.
+        file_path (str): Caminho do arquivo HDF5 onde os embeddings serão salvos.
+    """
+    os.makedirs(os.path.dirname(file_path), exist_ok=True)
+    
+    with h5py.File(file_path, 'a') as f:
+        if 'embeddings' not in f:
+            f.create_dataset('embeddings', data=embeddings, maxshape=(None, embeddings.shape[1]), dtype='float32')
+        else:
+            existing_embeddings = f['embeddings']
+            existing_embeddings.resize(existing_embeddings.shape[0] + embeddings.shape[0], axis=0)
+            existing_embeddings[-embeddings.shape[0]:] = embeddings
+
+
+def generate_embeddings(texts, tokenizer, model):
+    """
+    Gera embeddings para uma lista de textos usando um modelo pré-treinado.
+    
+    Args:
+        texts (list of str): Lista de textos para gerar embeddings.
+        tokenizer: Tokenizador do modelo.
+        model: Modelo pré-treinado para gerar embeddings.
+        
+    Returns:
+        numpy.ndarray: Embeddings gerados para os textos.
+    """
+    inputs = tokenizer(texts, padding=True, truncation=True, return_tensors='pt')
+    
+    # Gerando embeddings com a última camada oculta do modelo
+    with torch.no_grad():
+        outputs = model.distilbert(**inputs)
+    embeddings = outputs.last_hidden_state.mean(dim=1).numpy()
+    
+    return embeddings
+    
+
+# Função para dividir o contexto em blocos menores
+def split_context_into_blocks(context, block_size=100):
+    words = context.split()
+    return [' '.join(words[i:i + block_size]) for i in range(0, len(words), block_size)]
+
+
+def traduzir_texto(texto):
+    """
+    Traduz o texto usando um tradutor externo e lida com erros durante o processo.
+    
+    Args:
+        texto (str): O texto a ser traduzido.
+        
+    Returns:
+        str: O texto traduzido ou o texto original em caso de erro.
+    """
+
+    translator = GoogleTranslator(source='en', target='pt')
+    
+    try:
+        return translator.translate(texto)
+    except Exception as e:
+        print(f"Erro na tradução: {e}")
+        return texto
